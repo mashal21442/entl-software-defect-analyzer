@@ -21,13 +21,7 @@ from flask import (
 
 from werkzeug.utils import secure_filename
 
-from src.project_analyzer.project_service import (
-    analyze_uploaded_project,
-)
-
-from src.project_analyzer.zip_handler import (
-    ZipSecurityError,
-)
+from src.project_analyzer.zip_handler import ZipSecurityError
 
 
 # ==========================================================
@@ -70,7 +64,16 @@ REPORT_FOLDER.mkdir(
 # FLASK APP
 # ==========================================================
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    template_folder=str(
+        PROJECT_ROOT / "templates"
+    ),
+    static_folder=str(
+        PROJECT_ROOT / "static"
+    ),
+    static_url_path="/static",
+)
 
 
 # ==========================================================
@@ -103,6 +106,18 @@ app.config["MAX_CONTENT_LENGTH"] = (
 
 
 # ==========================================================
+# HEALTH CHECK
+# ==========================================================
+
+@app.get("/healthz")
+def healthz():
+
+    return {
+        "status": "ok"
+    }, 200
+
+
+# ==========================================================
 # HOME PAGE
 # ==========================================================
 
@@ -120,6 +135,44 @@ def home():
 
 @app.post("/analyze")
 def analyze():
+
+    # ======================================================
+    # IMPORTANT:
+    # Lazy-load the heavy ENTL/TensorFlow analyzer.
+    #
+    # This prevents TensorFlow from loading while Gunicorn
+    # is starting the Flask website.
+    # ======================================================
+
+    try:
+
+        from src.project_analyzer.project_service import (
+            analyze_uploaded_project,
+        )
+
+    except Exception as exc:
+
+        print()
+        print("=" * 70)
+        print("ANALYZER IMPORT ERROR")
+        print("=" * 70)
+        print(repr(exc))
+        print("=" * 70)
+        print()
+
+        flash(
+            "The analysis engine could not be loaded. "
+            "Please check the server logs."
+        )
+
+        return redirect(
+            url_for("home")
+        )
+
+
+    # ------------------------------------------------------
+    # Get uploaded ZIP
+    # ------------------------------------------------------
 
     uploaded_file = request.files.get(
         "project_zip"
@@ -203,16 +256,16 @@ def analyze():
     )
 
 
-    # ------------------------------------------------------
-    # Save uploaded ZIP temporarily
-    # ------------------------------------------------------
-
-    uploaded_file.save(
-        saved_path
-    )
-
-
     try:
+
+        # ==================================================
+        # SAVE UPLOADED ZIP TEMPORARILY
+        # ==================================================
+
+        uploaded_file.save(
+            saved_path
+        )
+
 
         # ==================================================
         # RUN COMPLETE PROJECT ANALYSIS
@@ -293,6 +346,14 @@ def analyze():
         FileNotFoundError,
     ) as exc:
 
+        print()
+        print("=" * 70)
+        print("EXPECTED PROJECT ANALYSIS ERROR")
+        print("=" * 70)
+        print(repr(exc))
+        print("=" * 70)
+        print()
+
         flash(
             str(exc)
         )
@@ -309,33 +370,16 @@ def analyze():
     except Exception as exc:
 
         print()
-
-        print(
-            "=" * 70
-        )
-
-        print(
-            "PROJECT ANALYSIS ERROR"
-        )
-
-        print(
-            "=" * 70
-        )
-
-        print(
-            repr(exc)
-        )
-
-        print(
-            "=" * 70
-        )
-
+        print("=" * 70)
+        print("PROJECT ANALYSIS ERROR")
+        print("=" * 70)
+        print(repr(exc))
+        print("=" * 70)
         print()
-
 
         flash(
             "Project analysis failed. "
-            "Check the terminal for the detailed error."
+            "Check the server logs for the detailed error."
         )
 
         return redirect(
@@ -445,11 +489,18 @@ def upload_too_large(
 
 if __name__ == "__main__":
 
+    port = int(
+        os.getenv(
+            "PORT",
+            "5000",
+        )
+    )
+
     app.run(
 
-        host="127.0.0.1",
+        host="0.0.0.0",
 
-        port=5000,
+        port=port,
 
         debug=False,
 
