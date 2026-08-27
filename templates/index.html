@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Defect Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="page-shell">
+        <section class="hero">
+            <div class="badge">AI + Static Analysis</div>
+            <h1>Project Defect Analyzer</h1>
+            <p class="hero-copy">
+                Upload your complete software project as a ZIP file.
+                The system detects its languages, analyzes source-code
+                quality, finds suspicious code patterns, and ranks files
+                by ENTL defect risk.
+            </p>
+        </section>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <section class="upload-card">
+            <form
+                id="analysis-form"
+                action="{{ url_for('analyze') }}"
+                method="post"
+                enctype="multipart/form-data"
+            >
+                <label
+                    for="project_zip"
+                    class="drop-zone"
+                    id="drop-zone"
+                >
+                    <div class="upload-icon">⇧</div>
+                    <strong>Drop your project ZIP here</strong>
+                    <span>or click to choose a file</span>
+                    <small id="selected-file">
+                        Maximum upload: 100 MB
+                    </small>
+                    <input
+                        type="file"
+                        id="project_zip"
+                        name="project_zip"
+                        accept=".zip,application/zip"
+                        required
+                    >
+                </label>
+
+                <div class="mode-section">
+                    <h2>Analysis mode</h2>
+
+                    <label class="mode-option">
+                        <input
+                            type="radio"
+                            name="analysis_mode"
+                            value="quick"
+                            checked
+                        >
+                        <span>
+                            <strong>Quick analysis</strong>
+                            <small>
+                                Best for testing and normal web use.
+                            </small>
+                        </span>
+                    </label>
+
+                    <label class="mode-option">
+                        <input
+                            type="radio"
+                            name="analysis_mode"
+                            value="full"
+                        >
+                        <span>
+                            <strong>Full ENTL analysis</strong>
+                            <small>
+                                Uses the complete 20-iteration configuration
+                                and requires more computation.
+                            </small>
+                        </span>
+                    </label>
+                </div>
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                    id="analyze-button"
+                >
+                    Analyze Project
+                </button>
+
+                <div
+                    class="loading-box hidden"
+                    id="loading-box"
+                >
+                    <div class="spinner"></div>
+                    <div>
+                        <strong>Analyzing project…</strong>
+                        <p>
+                            Extracting files, detecting languages,
+                            scanning code and running ENTL.
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <section class="feature-grid">
+            <article>
+                <h3>Multi-language</h3>
+                <p>
+                    Automatically detects many programming and
+                    markup languages inside one project.
+                </p>
+            </article>
+
+            <article>
+                <h3>Concrete issues</h3>
+                <p>
+                    Static analysis reports suspicious files,
+                    line numbers and issue descriptions.
+                </p>
+            </article>
+
+            <article>
+                <h3>Defect risk</h3>
+                <p>
+                    ENTL uses historical defect data to rank
+                    uploaded files by predicted defect-proneness.
+                </p>
+            </article>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

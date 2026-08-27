@@ -1,0 +1,5 @@
+path,language,file_size_bytes,total_lines,loc,blank_lines,comment_lines,comment_ratio,function_count,class_count,import_count,branch_count,loop_count,exception_count,return_count,boolean_operator_count,complexity_proxy,max_nesting,average_line_length,max_line_length,long_line_count,todo_fixme_count,function_density,branch_density,dependency_density,risk_flags
+app.py,python,89,4,4,0,0,0.0,1,0,0,1,0,0,2,0,2,2,21.0,26,0,0,0.25,0.25,0.0,
+index.html,html,69,6,6,0,0,0.0,0,0,0,0,0,0,0,0,1,0,10.333,21,0,0,0.0,0.0,0.0,
+script.js,javascript,94,6,6,0,0,0.0,2,0,0,1,0,0,2,0,2,2,14.5,31,0,0,0.333333,0.166667,0.0,
+UserService.java,java,176,8,8,0,0,0.0,1,1,0,1,0,0,2,0,2,3,20.875,43,0,0,0.125,0.125,0.0,

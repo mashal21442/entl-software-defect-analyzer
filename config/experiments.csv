@@ -1,0 +1,17 @@
+source,target,mapping_status
+JIRA/activemq5.0.0,AEEM/EQ,paper_explicit_example
+JIRA/activemq5.0.0,AEEM/JDT,reproduction_mapping
+JIRA/activemq5.0.0,AEEM/LC,reproduction_mapping
+JIRA/activemq5.0.0,AEEM/ML,reproduction_mapping
+AEEM/EQ,JIRA/activemq5.0.0,reproduction_mapping
+AEEM/EQ,JIRA/Derby10.5.1.1,reproduction_mapping
+AEEM/EQ,JIRA/Hbase0.94.0,reproduction_mapping
+AEEM/EQ,JIRA/Hive0.9.0,reproduction_mapping
+PROMISE/Lucene2.4,NASA/KC1,reproduction_mapping
+PROMISE/Lucene2.4,NASA/PC1,reproduction_mapping
+PROMISE/Lucene2.4,NASA/PC3,reproduction_mapping
+PROMISE/Lucene2.4,NASA/PC4,reproduction_mapping
+NASA/KC1,PROMISE/Lucene2.4,reproduction_mapping
+NASA/KC1,PROMISE/Poi3.0,reproduction_mapping
+NASA/KC1,PROMISE/Synapse1.2,reproduction_mapping
+NASA/KC1,PROMISE/Velocity1.6,reproduction_mapping

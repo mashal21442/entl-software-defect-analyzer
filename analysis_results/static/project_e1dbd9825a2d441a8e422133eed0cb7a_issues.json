@@ -1,0 +1,144 @@
+{
+  "issues": [
+    {
+      "path": "app.js",
+      "line": 1,
+      "rule": "possible_hardcoded_secret",
+      "severity": "high",
+      "message": "Possible hard-coded credential or secret.",
+      "code": "const api_key = \"SECRET-12345\";",
+      "source": "builtin"
+    },
+    {
+      "path": "app.js",
+      "line": 8,
+      "rule": "possible_sql_injection",
+      "severity": "high",
+      "message": "SQL statement appears to be built using string concatenation. Use parameterized queries.",
+      "code": "let query = \"SELECT * FROM users WHERE name = '\" + input + \"'\";",
+      "source": "builtin"
+    },
+    {
+      "path": "app.js",
+      "line": 14,
+      "rule": "dangerous_eval",
+      "severity": "high",
+      "message": "Use of eval() can execute untrusted code.",
+      "code": "return eval(code);",
+      "source": "builtin"
+    },
+    {
+      "path": "auth.py",
+      "line": 3,
+      "rule": "possible_hardcoded_secret",
+      "severity": "high",
+      "message": "Possible hard-coded credential or secret.",
+      "code": "password = \"admin123\"",
+      "source": "builtin"
+    },
+    {
+      "path": "auth.py",
+      "line": 11,
+      "rule": "dangerous_eval",
+      "severity": "high",
+      "message": "Use of eval() can execute untrusted code.",
+      "code": "result = eval(username)",
+      "source": "builtin"
+    },
+    {
+      "path": "auth.py",
+      "line": 17,
+      "rule": "shell_execution",
+      "severity": "high",
+      "message": "os.system() executes shell commands and should be reviewed carefully.",
+      "code": "os.system(command)",
+      "source": "builtin"
+    },
+    {
+      "path": "PaymentService.java",
+      "line": 3,
+      "rule": "possible_hardcoded_secret",
+      "severity": "high",
+      "message": "Possible hard-coded credential or secret.",
+      "code": "private String password = \"payment123\";",
+      "source": "builtin"
+    },
+    {
+      "path": "auth.py",
+      "line": 13,
+      "rule": "empty_exception_handler",
+      "severity": "medium",
+      "message": "Exception handler appears empty or only contains pass.",
+      "code": "except:",
+      "source": "builtin"
+    },
+    {
+      "path": "app.js",
+      "line": 3,
+      "rule": "todo_fixme",
+      "severity": "low",
+      "message": "Unresolved TODO/FIXME-style marker found.",
+      "code": "// FIXME: remove before production",
+      "source": "builtin"
+    },
+    {
+      "path": "app.js",
+      "line": 6,
+      "rule": "debug_statement",
+      "severity": "low",
+      "message": "Debug/output statement found in source code.",
+      "code": "console.log(input);",
+      "source": "builtin"
+    },
+    {
+      "path": "auth.py",
+      "line": 5,
+      "rule": "todo_fixme",
+      "severity": "low",
+      "message": "Unresolved TODO/FIXME-style marker found.",
+      "code": "# TODO: fix authentication",
+      "source": "builtin"
+    },
+    {
+      "path": "auth.py",
+      "line": 8,
+      "rule": "debug_statement",
+      "severity": "low",
+      "message": "Debug/output statement found in source code.",
+      "code": "print(\"Trying login:\", username)",
+      "source": "builtin"
+    },
+    {
+      "path": "PaymentService.java",
+      "line": 8,
+      "rule": "debug_statement",
+      "severity": "low",
+      "message": "Debug/output statement found in source code.",
+      "code": "System.out.println(\"Processing payment\");",
+      "source": "builtin"
+    },
+    {
+      "path": "app.js",
+      "line": 14,
+      "rule": "javascript.browser.security.eval-detected.eval-detected",
+      "severity": "medium",
+      "message": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.",
+      "code": "requires login",
+      "source": "semgrep"
+    },
+    {
+      "path": "auth.py",
+      "line": 11,
+      "rule": "python.lang.security.audit.eval-detected.eval-detected",
+      "severity": "medium",
+      "message": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.",
+      "code": "requires login",
+      "source": "semgrep"
+    }
+  ],
+  "issue_count": 15,
+  "high_count": 7,
+  "medium_count": 3,
+  "low_count": 5,
+  "semgrep_used": true
+}

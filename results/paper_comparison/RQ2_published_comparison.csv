@@ -1,0 +1,6 @@
+Metric,ENTL_published_average,WPDP_published_average,Improvement_percent,Note
+PD,0.711,0.411,72.99270072992701,
+PF,0.297,0.193,,Lower PF is better; WPDP has lower published average PF.
+F1-score,0.475,0.413,15.012106537530268,
+G-Mean,0.77,0.553,39.24050632911392,
+AUC,0.663,0.641,3.4321372854914225,

@@ -1,0 +1,9 @@
+Flask
+python-dotenv
+numpy
+pandas
+scikit-learn
+tensorflow
+xgboost
+semgrep
+tree-sitter-language-pack

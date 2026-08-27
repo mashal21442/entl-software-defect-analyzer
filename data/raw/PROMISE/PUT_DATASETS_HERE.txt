@@ -1,0 +1,2 @@
+Place the paper's PROMISE CSV files in this folder.
+See README.md for exact filenames and expected metadata.

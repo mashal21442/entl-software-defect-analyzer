@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <main class="page-shell results-shell">
+
+        <div class="results-header">
+            <div>
+                <div class="badge">Analysis complete</div>
+                <h1>{{ project_name }}</h1>
+                <p>
+                    Mode: <strong>{{ result.analysis_mode|title }}</strong>
+                    · Historical source:
+                    <strong>{{ result.source_dataset }}</strong>
+                </p>
+            </div>
+
+            <div class="header-actions">
+                <a
+                    class="primary-link-button"
+                    href="{{ url_for('download_report', report_id=report_id) }}"
+                >
+                    Download JSON Report
+                </a>
+
+                <a
+                    class="secondary-button"
+                    href="{{ url_for('home') }}"
+                >
+                    Analyze another project
+                </a>
+            </div>
+        </div>
+
+        <section class="health-panel">
+            <div class="health-score">
+                <strong>{{ result.project_health_score }}</strong>
+                <span>/ 100</span>
+            </div>
+
+            <div>
+                <h2>Project Health: {{ result.project_health_label }}</h2>
+                <p>
+                    A summary score based on predicted file risk and
+                    static-analysis findings.
+                </p>
+                <small>{{ result.health_score_note }}</small>
+            </div>
+        </section>
+
+        <section class="summary-grid">
+            <article class="summary-card">
+                <span>Files analyzed</span>
+                <strong>{{ result.detected_file_count }}</strong>
+            </article>
+
+            <article class="summary-card danger">
+                <span>High risk</span>
+                <strong>{{ result.high_risk_files }}</strong>
+            </article>
+
+            <article class="summary-card warning">
+                <span>Medium risk</span>
+                <strong>{{ result.medium_risk_files }}</strong>
+            </article>
+
+            <article class="summary-card success">
+                <span>Low risk</span>
+                <strong>{{ result.low_risk_files }}</strong>
+            </article>
+
+            <article class="summary-card">
+                <span>Static issues</span>
+                <strong>{{ result.total_issues }}</strong>
+            </article>
+        </section>
+
+        <section class="panel">
+            <h2>Languages detected</h2>
+
+            <div class="language-list">
+                {% for language, count in result.languages.items() %}
+                    <span>
+                        {{ language }}
+                        <strong>{{ count }}</strong>
+                    </span>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Files ranked by risk</h2>
+                    <p>
+                        Search and filter large projects to focus on the
+                        files that need attention.
+                    </p>
+                </div>
+            </div>
+
+            <div class="result-filters">
+                <input
+                    type="search"
+                    id="file-search"
+                    placeholder="Search file name or path..."
+                    autocomplete="off"
+                >
+
+                <select id="risk-filter">
+                    <option value="all">All risk levels</option>
+                    <option value="high">High risk</option>
+                    <option value="medium">Medium risk</option>
+                    <option value="low">Low risk</option>
+                </select>
+
+                <select id="language-filter">
+                    <option value="all">All languages</option>
+                    {% for language, count in result.languages.items() %}
+                        <option value="{{ language|lower }}">
+                            {{ language }} ({{ count }})
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <button
+                    type="button"
+                    id="clear-filters"
+                    class="filter-clear-button"
+                >
+                    Clear
+                </button>
+            </div>
+
+            <p class="filter-count">
+                Showing <strong id="visible-file-count">{{ result.detected_file_count }}</strong>
+                of {{ result.detected_file_count }} files
+            </p>
+
+            <div class="file-list" id="file-list">
+
+                {% for file in result.files %}
+
+                    <article
+                        class="file-card {{ file.risk_level }}"
+                        data-path="{{ file.path|lower }}"
+                        data-risk="{{ file.risk_level|lower }}"
+                        data-language="{{ file.language|lower }}"
+                    >
+
+                        <div class="file-card-top">
+                            <div>
+                                <div class="risk-label">
+                                    {{ file.risk_level|upper }} RISK
+                                </div>
+
+                                <h3>{{ file.path }}</h3>
+                                <p>{{ file.language }}</p>
+                            </div>
+
+                            <div class="score-circle">
+                                <strong>
+                                    {{ "%.1f"|format(file.entl_risk_score) }}%
+                                </strong>
+                                <span>ENTL score</span>
+                            </div>
+                        </div>
+
+                        <div class="file-stats">
+                            <span>
+                                Algorithm-1 vote
+                                <strong>
+                                    {{ "%.1f"|format(file.algorithm1_vote_percent) }}%
+                                </strong>
+                            </span>
+
+                            <span>
+                                Relative percentile
+                                <strong>
+                                    {{ "%.1f"|format(file.relative_risk_percentile) }}
+                                </strong>
+                            </span>
+
+                            <span>
+                                Static issues
+                                <strong>{{ file.issue_count }}</strong>
+                            </span>
+
+                            <span>
+                                LOC
+                                <strong>{{ file.metrics.get("loc", 0) }}</strong>
+                            </span>
+
+                            <span>
+                                Complexity
+                                <strong>
+                                    {{ file.metrics.get("complexity_proxy", 0) }}
+                                </strong>
+                            </span>
+
+                            <span>
+                                Max nesting
+                                <strong>
+                                    {{ file.metrics.get("max_nesting", 0) }}
+                                </strong>
+                            </span>
+                        </div>
+
+                        {% if file.issues %}
+                            <div class="issues">
+                                <h4>Problems detected</h4>
+
+                                {% for issue in file.issues %}
+                                    <div class="issue-row {{ issue.severity }}">
+                                        <div class="issue-title">
+                                            <span>{{ issue.severity|upper }}</span>
+                                            <strong>
+                                                Line {{ issue.line }} · {{ issue.rule }}
+                                            </strong>
+                                        </div>
+
+                                        <p>{{ issue.message }}</p>
+
+                                        {% if issue.context %}
+                                            <div class="code-context">
+                                                {% for code_line in issue.context %}
+                                                    <div
+                                                        class="code-line {% if code_line.is_target %}target-line{% endif %}"
+                                                    >
+                                                        <span class="line-number">
+                                                            {{ code_line.line_number }}
+                                                        </span>
+
+                                                        <code>{{ code_line.text }}</code>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+
+                                        {% elif issue.code %}
+                                            <code class="single-code-line">
+                                                {{ issue.code }}
+                                            </code>
+                                        {% endif %}
+
+                                        <small>Source: {{ issue.source }}</small>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                        {% else %}
+                            <div class="no-issues">
+                                No concrete static-analysis issue was
+                                detected in this file.
+                            </div>
+                        {% endif %}
+
+                        {% if file.metrics.get("risk_flags") %}
+                            <div class="metric-flags">
+                                {% for flag in file.metrics.get("risk_flags", []) %}
+                                    <span>{{ flag.replace("_", " ") }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                    </article>
+
+                {% endfor %}
+            </div>
+
+            <div class="empty-filter-state hidden" id="empty-filter-state">
+                No files match the selected filters.
+            </div>
+        </section>
+
+        <section class="note-panel">
+            <strong>Important:</strong>
+            {{ result.important_note }}
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
