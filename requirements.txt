@@ -7,3 +7,4 @@ tensorflow
 xgboost
 semgrep
 tree-sitter-language-pack
+gunicorn
