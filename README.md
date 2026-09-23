@@ -1,4 +1,4 @@
-# ENTL Paper Reproduction Project
+### Reproduction and Practical Extension of ENTL for Heterogeneous Cross-Project Software Defect Prediction
 
 This folder upgrades the earlier ENTL-style prototype into a research-oriented
 reproduction of:
