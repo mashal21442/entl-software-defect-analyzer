@@ -22,7 +22,7 @@ reproduction of:
 - Aggregates PD, PF, F1, G-Mean and AUC as mean ± standard deviation by target project family
 - Creates RQ1 comparison files for EGW, HDP_KS, CTKCCA and EMKCA
 - Creates RQ2 comparison files for WPDP
-- Includes a Streamlit research dashboard
+- Includes a Flask-based research dashboard for analyzing uploaded software projects
 
 ## Important reproduction limits
 
@@ -195,8 +195,9 @@ results/paper_comparison/local_ENTL_vs_published_ENTL.csv
 These reproduce the paper's reported improvement statements for PD, F1,
 G-Mean and AUC (approximately 72.99%, 15.01%, 39.24% and 3.43%).
 
-## Streamlit
+## Run the Flask Web Application
+
+After installing the required dependencies, start the web application with:
 
 ```powershell
-streamlit run app.py
-```
+python app.py
